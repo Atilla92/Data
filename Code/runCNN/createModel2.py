@@ -28,19 +28,15 @@ from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 
-# Define which files and where they are located
-# path_architecture ='/home/ajv/Desktop/DroneAI/Model/'
-# pathFiles_dataset = "/home/ajv/Desktop/DroneAI/Model/"
-# file_name = 'V4_'
-# detail = 'compact_all_rand'
-path_architecture ='/home/ajv/Desktop/DroneAI/Model/'
-pathFiles_dataset = "/home/ajv/Desktop/DroneAI/Model/"
-file_name = 'V4_'
-detail = 'compact_all_rand'
+# 1 Define paths of files
+path_architecture ='/home/ajv/Desktop/DroneAI/Model/' # set the path to your architecture of model
+pathFiles_dataset = "/home/ajv/Desktop/DroneAI/Model/" # specify the path to your trainijng data
+file_name = 'V4_' # name of data set
+detail = 'compact_all_rand' # name of dataset
 
 
 
-# Define size training and test data set
+# 2 Define size training and test data set
 train_size = 0.8 # percentage of dataset
 test_size = 0.2 # percentage of dataset
 batch_size = 12
@@ -51,36 +47,23 @@ shapex, shapey = 360, 30
 
 
 
-#5 Load new model or create new
+#3 Load new model or create new, evaluate model, 2D or 3D input , save model, save predictions
+# Set to True or False
 new_model = True	# Make a new model architecture
 eva_model = True	# Evaluate model
 save_model = True # Save model
-rgb_model = False # True for 3 dimensional inpput
+rgb_model = False # True for 3 dimensional inpput, add an extra matrix of zeros
 save_predictions = True # Save predictions
 
 
-# Load new model
-
-
-# name_model = 'modelDario'
-# name_weights = 'weightsDario'
-# path_model = '/home/ajv/Desktop/DroneAI/Model/Dario/'
-
-# #Load old model 
-# if new_model == False:
-# 	name_model_load= 'modelRGB_small2017-04-21-21:37:16.hdf5'
-# 	name_weights_load = 'weightsRGB_small'
-# 	path_model_load = '/home/ajv/Desktop/DroneAI/Model/'
-# 	print('loading model'+ name_model_load)
-
-# # Save model
-# path_save = '/home/ajv/Desktop/DroneAI/Model/Dario/'
-# 4 Define paramters model
+# 4.1 Define name of model and weights file that will be saved, and path to where to save model
 name_model = 'modelA2'
 name_weights = 'weightsA2'
-path_model = '/home/ajv/Desktop/DroneAI/Model/Dario/'
+path_save = '/home/ajv/Desktop/DroneAI/Model/Dario/Compare/'
 
-#Load old model 
+#path_model = '/home/ajv/Desktop/DroneAI/Model/Dario/'
+
+# 4.2 In case you Load old model specify its path and name of model file and weights 
 if new_model == False:
 	name_model_load= 'modelRGB_small2017-04-21-21:37:16.hdf5'
 	name_weights_load = 'weightsRGB_small'
@@ -88,33 +71,32 @@ if new_model == False:
 	print('loading model'+ name_model_load)
 
 
-# Save model
-path_save = '/home/ajv/Desktop/DroneAI/Model/Dario/Compare/'
+# 5. Create a new file 
 
 os.chdir(path_save)
 file_new  =  time.strftime('%F-%T')
 if not os.path.exists(file_new):
     os.makedirs(file_new)
-# 4 Define paramters model
+
 
 
 ##############################################################################
-#1 Load data for training and testing model
+#6 Load data for training and testing model
 
 dataset_x, dataset_y, dataset_y_raw = load_data(pathFiles_dataset,file_name, detail)
 
-#2 Split data into training ad testing set
+#6.1 Split data into training ad testing set
 
 train_data_x, train_data_y, train_data_y_raw, train_data_y_deg,test_data_x, test_data_y, test_data_y_raw, test_data_y_deg = split_data(
 										dataset_x, dataset_y, dataset_y_raw, train_size, test_size)
 
 
-# Reformat data, dim last, posible 3 D
+# 6.2 Reformat data, dim last, posible 3 D
 
 train_data_x_ch_last, test_data_x_ch_last, num_dim = reformat_data(rgb_model, train_data_x, test_data_x)
 
 
-# Load model
+# 6.3 Load model
 if new_model == True:
 	os.chdir(path_architecture)
 	model = new_architecture(num_dim)
@@ -159,8 +141,6 @@ if save_model == True:
 	f = h5py.File('score')
 	f.create_dataset('score', data = score, dtype = 'f', chunks = True)
 
-
-	#model.save()
 
 
 ##### Predictions ####
