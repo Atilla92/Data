@@ -1,5 +1,5 @@
 import os, glob
-os.environ['KERAS_BACKEND'] = 'theano'
+os.environ['KERAS_BACKEND'] = 'tensorflow'
 import h5py
 import numpy as np 
 
@@ -8,44 +8,37 @@ from keras.models import load_model
 from computationMakePlots import *
 import keras.backend as K
 
-
+#----------Specify path and name file model --------------------------
+# 1 Set path to models
 pathFiles = "/home/atilla/Documents/DeepLearning/Model/Compare/Simple/"
 os.chdir(pathFiles)
 
 
+#2 Set name specific files
+files = [file for file in glob.glob("2017-05-18-11:10:18") ]#if 'VersionBig_' in file]
+print (files)
 
 
+
+#-----------Accuracy Plots ---------------------------------------------------------------------------------------------
+# Specify which plots you would like
+make_plots = True #accuracy plot
+make_plots_loss = True #loss plot
 font = {'family' : 'normal',
         'weight' : 'normal',
         'size'   : 24}
 
 plt.rc('font', **font)
 
-
-
-# pathFiles = "/home/atilla/Documents/DeepLearning/Model/Compare/"
-# os.chdir(pathFiles)
-# os.environ['KERAS_BACKEND'] = 'tensorflow'
-# import tensorflow as tf
-
-# #files = find_files(pathFiles)
-# files = [file for file in glob.glob("2017*") ]#if 'VersionBig_' in file]
-# print (files)
-
-# data_accuracy, data_parameters, data_loss, data_name = extract_info(files, pathFiles)
-
-
-
-
-
-#files = find_files(pathFiles)
-files = [file for file in glob.glob("2017*") ]#if 'VersionBig_' in file]
-print (files)
-#files = files[0,2,3,4,5]
-data_accuracy, data_parameters, data_loss, data_name = extract_info(files, pathFiles)
-print(data_name, 'data naaaaamesssssss')
-
+# Extract Information and make accuracy loss plots. 
+data_accuracy, data_parameters, data_loss, data_name = extract_info(files, pathFiles, make_plots, make_plots_loss)
+print(data_name, 'data name')
 plt.show()
+
+
+
+#-------------Store data -----------------------------------------------------------------------------------------
+# Store specific paramerers model
 store_data = False
 if store_data == True:
 	pathFiles = "/home/atilla/Documents/DeepLearning/Model/Compare/CNN"
@@ -57,7 +50,8 @@ if store_data == True:
 	f.create_dataset ('loss', data = data_loss, dtype = 'f', chunks = True)
 	f.create_dataset ('name', data = data_name, dtype = dt)
 
-
+#-----------------Scatter Plot--------------------------------------------
+# Scatter plot of parameters vs accuracy, with specified colour and name for each model. Change names, and colors if using a new set of models.
 scatter_final = False
 if scatter_final == True:
 	names = ['2 hidden + drop','1 hidden', '2 hidden (64)', '0 hidden', '2 hidden (64)+ drop','2 hidden', '1 hidden + drop']
@@ -111,9 +105,6 @@ if scatter_plot == True:
 	plot_d = plt.scatter(x[3], y[3], c =colours[3], marker = 'o', label = names[3], linewidth = 0, s= size_s)
 	plot_e = plt.scatter(x[4], y[4], c =colours[4], marker = 's', label = names[4], linewidth = 0, s= size_s)
 	plot_f = plt.scatter(x[5], y[5], c =colours[5], marker = 'o', label = names[5], linewidth = 0, s= size_s)
-
-
-
 	#plot_g = plt.scatter(x[6], y[6], c =colours[6], marker = 's', label = names[6], linewidth = 0, s= size_s)
 
 

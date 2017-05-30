@@ -12,9 +12,7 @@ def size_model(model): # Compute number of params in a model (the actual number 
 #extract logfile 
 
 
-def extract_info(files, pathFiles):
-	make_plots = False
-	make_plots_loss = False
+def extract_info(files, pathFiles, make_plots, make_plots_loss):
 	extract_score = True
 	label_size = 30
 	title_size = 38
@@ -68,13 +66,13 @@ def extract_info(files, pathFiles):
 			print('plotting')
 			colours = ['g', 'b', 'r', 'y', 'm', 'k', 'b', 'b']
 			plt.figure(1)
-			plt.plot(epoch, accuracy_training*100, label ='training '+model_name, linewidth = 2.5)
-			plt.plot(epoch, accuracy_validation*100, label =model_name, linewidth = 2.5)#, color = colours[a])
+			plt.plot(epoch, accuracy_training*100, label ='training ', linewidth = 2.5)#+model_name, linewidth = 2.5)
+			plt.plot(epoch, accuracy_validation*100, label ='validation ', linewidth =2.5) #model_name, linewidth = 2.5)#, color = colours[a])
 			plt.xlabel('Epochs', fontsize = label_size)
 			plt.ylabel('Accuracy [%]', fontsize =label_size)
-			plt.title('Validation Accuracy', fontsize = title_size)
+			plt.title('Accuracy', fontsize = title_size)
 			plt.axis([0,70,0,100])
-			plt.legend(fontsize = 20)
+			plt.legend(fontsize = 20, loc = 'lower right')
 			plt.show()
 		if make_plots_loss == True:
 			plt.figure(2)
@@ -83,9 +81,9 @@ def extract_info(files, pathFiles):
 			plt.title('Loss Model'+ str(i))
 			plt.xlabel('Epochs', fontsize = label_size)
 			plt.ylabel('Loss', fontsize = label_size)
-			plt.title('Validation Loss', fontsize = title_size)
+			plt.title('Loss', fontsize = title_size)
 			plt.axis([0,70,0,20])
-			plt.legend( fontsize = 20)
+			plt.legend( fontsize = 20, loc = 'lower right')
 			plt.show()
 		data_parameters.append(parameters)
 		data_accuracy.append(scores[1])
